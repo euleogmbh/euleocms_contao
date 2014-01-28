@@ -228,7 +228,10 @@ class Euleo_Backend_Dca implements Euleo_Backend {
 	
 	protected function getRootLevelByPage($id)
 	{
-		$parents = PageModel::findParentsById($id)->getResult();
+		$query = "SELECT *, @pid:=pid FROM tl_page WHERE id=?"
+			   . str_repeat(" UNION SELECT *, @pid:=pid FROM tl_page WHERE id=@pid", 9);
+		
+		$parents = $objPages = \Database::getInstance()->prepare($query)->execute($id);
 		
 		while ($parents->next()) {
 			if ($parents->type == 'root') {

@@ -1,3 +1,3 @@
 CREATE TABLE `tl_content` (
-`languageMain` INT NOT NULL
+`languageMain` int(11) unsigned NOT NULL default '0'
 ) ENGINE = MYISAM ;
