@@ -1,10 +1,10 @@
-=== Euleo Übersetzungsbüro ===
+#Euleo Übersetzungsbüro
 Contributors: euleogmbh
 License: GPLv2 or later
 
 Translate your Website using the Services of https://www.euleo.com/
 
-== Description ==
+##Description
 
 ###Das Euleo Übersetzungsbüro Modul für Contao
 
@@ -66,10 +66,9 @@ automatisch an die richtigen Stellen in der Datenbank eingespielt.
 Eine E-Mail informiert Sie über die Fertigstellung.
 
 
-== Installation ==
+##Installation
 
-- Installieren Sie das Modul "changelanguage"
-  (https://contao.org/de/extension-list/view/changelanguage.60039.de.html).
+- Installieren Sie das Modul ["changelanguage"](https://contao.org/de/extension-list/view/changelanguage.60039.de.html).
   
 - Installieren Sie das "Euleo Übersetzungsbüro"-Modul.
 
@@ -87,5 +86,5 @@ Sollten Sie noch keinen Euleo-Account haben, registrieren Sie sich bitte auf htt
 
 Nach der Bestätigung Ihrer E-Mail-Adresse können Sie Ihre Contao-Installation damit verknüpfen. 
 
-== Frequently Asked Questions ==
+##Frequently Asked Questions
 siehe https://www.euleo.com/business/FAQ.htm
