@@ -1,0 +1,29 @@
+<div class="tl_listing_container">
+	<?php 
+		if ($this->error) {
+			?>
+				<div class="error"><?php echo $this->error; ?></div>
+			<?php 
+		} else if ($this->userdata) {
+			?>
+				<p><?php printf($GLOBALS['TL_LANG']['tl_euleo']['userdata'], $this->userdata['emailaddress'], $this->userdata['company']); ?></p>
+			
+				<div>
+					<a class="tl_submit" href="<?php echo TL_PATH; ?>/contao/main.php?do=euleo&action=install">
+						<?php echo $GLOBALS['TL_LANG']['tl_euleo']['relogin_button']; ?>
+					</a>
+				</div>
+			<?php
+		} else {
+			?>
+				<p><?php echo $GLOBALS['TL_LANG']['tl_euleo']['intro']; ?></p>
+				<p><?php echo $GLOBALS['TL_LANG']['tl_euleo']['intro2']; ?></p>
+				<div>
+					<a class="tl_submit" href="<?php echo TL_PATH; ?>/contao/main.php?do=euleo&action=install">
+						<?php echo $GLOBALS['TL_LANG']['tl_euleo']['login_button']; ?>
+					</a>
+				</div>
+			<?php
+		}
+	?>
+</div>
