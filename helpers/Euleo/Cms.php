@@ -21,12 +21,49 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 class Euleo_Cms
 {
+	/**
+	 * The SoapClient
+	 *
+	 * @var SoapClient
+	 */
 	protected $client;
+	
+	/**
+	 * Euleo-Usercode
+	 *
+	 * @var string
+	 */
 	protected $usercode;
+	
+	/**
+	 * The handle
+	 *
+	 * @var string
+	 */
 	protected $handle;
+	
+	/**
+	 * Version of the Client
+	 *
+	 * @var float
+	 */
 	protected $clientVersion = 2.0;
+	
+	/**
+	 * CMS type
+	 *
+	 * @var string
+	 */
 	protected $cms = 'contao';
 
+	/**
+	 * Connects to Euleo-Service and stores the handle if successful
+	 *
+	 * @param string $customer
+	 * @param string $usercode
+	 *
+	 * @throws Exception
+	 */
 	public function __construct($customer, $usercode, $cms) {
 		$this->customer = $customer;
 		$this->usercode = $usercode;
@@ -63,6 +100,17 @@ class Euleo_Cms
 		}
 	}
 	
+	/**
+	 * Returns a register token.
+	 *
+	 * Specify your cms-root and a return-url, to which you will be redirected after connecting
+	 *
+	 * @param string $cmsroot
+	 * @param string $returnUrl
+	 * @param string $callbackUrl
+	 *
+	 * @return string $token
+	 */
 	public function getRegisterToken($cmsroot, $returnUrl)
 	{
 		$request = array();
@@ -84,6 +132,15 @@ class Euleo_Cms
 		}
 	}
 	
+	/**
+	 * Use this after the user has confirmed the connection prompt and been redirected back to get the customer info.
+	 *
+	 * @param string $token
+	 *
+	 * @throws Exception
+	 *
+	 * @return array
+	 */
 	public function install($token)
 	{
 		$request = array();
@@ -102,6 +159,13 @@ class Euleo_Cms
 		return $response['data'];
 	}
 	
+	/**
+	 * Returns the data of the currently connected Euleo customer.
+	 *
+	 * @throws Exception
+	 *
+	 * @return array
+	 */
 	public function getCustomerData()
 	{
 		$request = array();
@@ -119,11 +183,23 @@ class Euleo_Cms
 		return $response['data'];
 	}
 	
+	/**
+	 * returns TRUE if there is a user connected.
+	 *
+	 * @return boolean
+	 */
 	public function connected()
 	{
 		return $this->handle != false;
 	}
 	
+	/**
+	 * sets the list of supported languages for your site. (comma-separated list).
+	 *
+	 * @param string $languageList
+	 *
+	 * @return array
+	 */
 	public function setLanguageList($languageList)
 	{
 		$request = array();
@@ -137,11 +213,22 @@ class Euleo_Cms
 		return $response;
 	}
 
-
+	/**
+	 * returns a link to the current shopping cart in the euleo system.
+	 *
+	 * @return string
+	 */
 	public function startEuleoWebsite() {
 		return $this->host . "/business/auth/index/handle/" . $this->handle;
 	}
 
+	/**
+	 * fetches the rows which are currently in translation or ready but not delivered.
+	 *
+	 * don't forget to use confirmDelivery().
+	 *
+	 * @return array
+	 */
 	public function getRows($translationIdList = array()) {
 	    $request = array();
 	    $request['handle'] = $this->handle;
@@ -161,6 +248,66 @@ class Euleo_Cms
 		return $response['rows'];
 	}
 
+	/**
+	 * sends the rows for translation
+	 *
+	 * rows can have fields or rows as children<br>
+	 * rows are arrays with the following scheme:<br>
+	 *
+		<pre>
+		Array
+		(
+				[code] => page_1
+				[title] => Demo page with all field types
+				[label] => Page
+				[srclang] => en
+				[description] => This is shown in the shopping cart
+				[url] => Enter the URL of the page here, so the translator can view the original
+				[fields] => Array
+				(
+						[title] => Array
+						(
+								[label] => Title
+								[value] => Demo page with all field types
+								[type] => text
+						)
+		
+						[shorttext] => Array
+						(
+								[label] => Short text
+								[value] => &lt;b&gt;In this fields HTML can be used.&lt;/b&gt;
+		[type] => richtextarea
+		)
+		)
+		
+		[rows] => Array
+		(
+				[0] => Array
+				(
+						[code] => content_1
+						[title] =>
+						[label] => Content
+						[srclang] => en
+						[description] => Content "content_1"
+						[url] => Enter the URL of the containing page here, so the translator can view the original
+						[fields] => Array
+						(
+								[text] => Array
+								(
+										[label] => Text
+										[value] => This field could contain multiple lines but no HTML
+										[type] => textarea
+								)
+						)
+				)
+		)
+		)
+		</pre>
+	 *
+	 * @param array $rows
+	 *
+	 * @return array
+	 */
 	public function sendRows($rows) {
 	    $request = array();
 	    $request['handle'] = $this->handle;
@@ -176,6 +323,13 @@ class Euleo_Cms
 	   	return $response;
 	}
 
+	/**
+	 * confirms delivery of the translations in the euleo system (comma-separated list)
+	 *
+	 * @param array $translationids
+	 *
+	 * @return array
+	 */
 	public function confirmDelivery(array $translationids) {
 		$request['handle'] = $this->handle;
 		$request['translationIdList'] = implode(',', $translationids);
@@ -188,7 +342,11 @@ class Euleo_Cms
 		return $response;
 	}
 
-	
+	/**
+	 * returns the contents of the current shopping cart
+	 *
+	 * @return array
+	 */
 	public function getCart()
 	{
 		$request['handle'] = $this->handle;
@@ -200,6 +358,11 @@ class Euleo_Cms
 		return $response;
 	}
 	
+	/**
+	 * clears cart
+	 *
+	 * @return array
+	 */
 	public function clearCart()
 	{
 		$request['handle'] = $this->handle;
@@ -211,6 +374,14 @@ class Euleo_Cms
 		return $response;
 	}
 	
+	/**
+	 * adds a language to the row with the specified code
+	 *
+	 * @param string $code
+	 * @param string $language
+	 *
+	 * @return array
+	 */
 	public function addLanguage($code, $language)
 	{
 		$request = array();
@@ -226,6 +397,14 @@ class Euleo_Cms
 		return $response;
 	}
 	
+	/**
+	 * removes a language from the row with the specified code
+	 *
+	 * @param string $code
+	 * @param string $language
+	 *
+	 * @return array
+	 */
 	public function removeLanguage($code, $language)
 	{
 		$request = array();
@@ -242,6 +421,13 @@ class Euleo_Cms
 		return $response;
 	}
 	
+	/**
+	 * tries to identify the languages of the elements in $texts
+	 *
+	 * @param array $texts
+	 *
+	 * @return array
+	 */
 	public function identifyLanguages($texts)
     {
     	$request = array();
@@ -257,6 +443,13 @@ class Euleo_Cms
 		return $response;
     }
     
+    /**
+     * sets the callback-url
+     *
+     * @param string $url
+     *
+     * @return array
+     */
     public function setCallbackUrl($url)
     {
     	$request = array();
@@ -272,6 +465,14 @@ class Euleo_Cms
 		return $response;
     }
 	
+    /**
+     * creates a request-xml from $data and $action
+     *
+     * @param array $data
+     * @param string $action
+     *
+     * @return string
+     */
 	protected function _createRequest($data, $action)
     {
         if (!is_array($data)) {
@@ -292,6 +493,14 @@ class Euleo_Cms
         return $xmlstr;
     }
     
+    /**
+     * recursive sub-function of _createRequest
+     *
+     * @param array $data
+     * @param string $parentKey
+     *
+     * @return string
+     */
     protected function _createRequest_sub($data, $parentKey = '')
     {
         $xml = array();
@@ -314,6 +523,13 @@ class Euleo_Cms
         return $xmlstr;
     }
     
+    /**
+     * converts a row to xml
+     *
+     * @param array $row
+     *
+     * @return string
+     */
     protected function _rowToXml_sub($row)
     {
         $lines=array();

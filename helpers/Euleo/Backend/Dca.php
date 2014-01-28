@@ -315,7 +315,7 @@ class Euleo_Backend_Dca implements Euleo_Backend {
 		if ($page->type == 'root') {
 			$existing = $langRoot->row();
 		} else {
-			$existing = $this->db->prepare('SELECT * FROM tl_page WHERE languageMain = ?')->execute($id)->row();
+			$existing = $this->db->prepare('SELECT * FROM tl_page WHERE languageMain = ? AND language = ?')->execute($id, $row['lang'])->row();
 		}		
 		
 		$update = array();
@@ -364,7 +364,18 @@ class Euleo_Backend_Dca implements Euleo_Backend {
 	{
 		$article = $this->db->prepare('SELECT * FROM tl_article WHERE id = ?')->execute($id);
 		
-		$existing = $this->db->prepare('SELECT * FROM tl_article WHERE languageMain = ?')->execute($id)->row();
+		$existing = $this->db->prepare('
+			SELECT
+				tl_article.*
+			FROM
+				tl_article,
+				tl_page
+			WHERE
+				tl_article.pid = tl_page.id
+				AND tl_page.id = ?
+				AND tl_article.languageMain = ?
+				
+		')->execute($pageId, $id)->row();
 		
 		$update = array();
 		
@@ -406,7 +417,18 @@ class Euleo_Backend_Dca implements Euleo_Backend {
 	{
 		$content = $this->db->prepare('SELECT * FROM tl_content WHERE id = ?')->execute($id);
 
-		$existing = $this->db->prepare('SELECT * FROM tl_content WHERE languageMain = ?')->execute($id)->row();
+		$existing = $this->db->prepare('
+			SELECT
+				tl_content.*
+			FROM
+				tl_content,
+				tl_article
+			WHERE
+				tl_content.pid = tl_article.id
+				AND tl_article.id = ?
+				AND tl_content.languageMain = ?
+				
+		')->execute($articleId, $id)->row();
 		
 		$update = array();
 		
