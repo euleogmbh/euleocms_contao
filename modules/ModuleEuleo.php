@@ -64,7 +64,9 @@ class ModuleEuleo extends BackendModule
 	
 	public function compile()
 	{
-		$this->Template->userdata = $this->bridge->getCustomerData();
+		if ($GLOBALS['TL_CONFIG']['euleo_customer']) {
+			$this->Template->userdata = $this->bridge->getCustomerData();
+		}
 		
 		if ($this->error) {
 			$this->Template->error = $this->error;
