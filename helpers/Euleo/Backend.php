@@ -21,7 +21,7 @@ interface Euleo_Backend
 	 * Constructor
 	 * @param Controller $module
 	 */
-	public function __construct(Controller $module);
+	public function __construct(Controller $module, Euleo_Contao $bridge);
 	
 	/**
 	 * Returns all the rows by means of DCA

@@ -30,6 +30,11 @@ class Euleo_Backend_Dca implements Euleo_Backend {
 	 */
 	protected $module = null;
 	
+	/**
+	 * @var Euleo_Contao
+	 */
+	protected $bridge = null;
+	
 	protected $tables = array('tl_page', 'tl_article', 'tl_content');
 	
 	protected $dca = null;
@@ -40,7 +45,7 @@ class Euleo_Backend_Dca implements Euleo_Backend {
 	 * (non-PHPdoc)
 	 * @see Euleo_Backend::__construct()
 	 */
-	public function __construct(Controller $module)
+	public function __construct(Controller $module, Euleo_Contao $bridge)
 	{
 		$this->module = $module;
 		
@@ -50,6 +55,7 @@ class Euleo_Backend_Dca implements Euleo_Backend {
 		
 		$this->srcLang = $mainPage->language;
 		
+		$this->bridge = $bridge;
 		
 		$this->setPageLanguages();
 	}
@@ -297,12 +303,22 @@ class Euleo_Backend_Dca implements Euleo_Backend {
 	
 	protected function handleRows($rows)
 	{
+	    $deliveredIds = array();
+	    
 		foreach ((array)$rows as $row) {
 			list($table, $id) = explode('__', $row['id']);
 				
 			if ($table == 'tl_page') {
 				$this->handlePage($row, $id);
 			}
+			
+			if ($row['ready'] == 1) {
+			    $deliveredIds[$row['translationid']] = $row['translationid'];
+			}
+		}
+		
+		if ($deliveredIds) {
+		    $this->bridge->confirmDelivery(array_keys($deliveredIds));
 		}
 		
 		return true;

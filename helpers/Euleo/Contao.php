@@ -145,7 +145,7 @@ class Euleo_Contao
 		$strName = 'Euleo_Backend_' . ucfirst($GLOBALS['TL_CONFIG']['euleo_backend']);
 		
 		if (class_exists($strName)) {
-			$this->backend = new $strName($module);
+			$this->backend = new $strName($module, $this);
 		}
 		
 		return $this->backend;
