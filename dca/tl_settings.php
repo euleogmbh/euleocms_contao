@@ -1,6 +1,6 @@
 <?php
 
-$GLOBALS['TL_DCA']['tl_settings']['palettes']['default'] .= ';{euleo_legend},euleo_customer,euleo_usercode,euleo_default_lang,euleo_backend';
+$GLOBALS['TL_DCA']['tl_settings']['palettes']['default'] .= ';{euleo_legend},euleo_customer,euleo_usercode,euleo_default_lang,euleo_backend,euleo_mode';
 
 $GLOBALS['TL_DCA']['tl_settings']['fields']['euleo_customer'] = array
 (
@@ -30,6 +30,20 @@ $GLOBALS['TL_DCA']['tl_settings']['fields']['euleo_backend'] = array
 	'eval' => array(
 		'mandatory' => false,
 		'tl_class' => 'w50 clr',
+	)
+);
+
+$GLOBALS['TL_DCA']['tl_settings']['fields']['euleo_mode'] = array
+(
+	'inputType' => 'select',
+	'label' => &$GLOBALS['TL_LANG']['tl_settings']['euleo_mode'],
+    'options' => array(
+        'new' => &$GLOBALS['TL_LANG']['tl_settings']['euleo_mode_new'],
+        'all' => &$GLOBALS['TL_LANG']['tl_settings']['euleo_mode_all']
+    ),
+	'eval' => array(
+		'mandatory' => true,
+		'tl_class' => 'w50'
 	)
 );
 

@@ -8,6 +8,7 @@ ClassLoader::addClasses(array
 	'Euleo_Cms' => 'system/modules/euleo/helpers/Euleo/Cms.php',
 	'Euleo_Backend' => 'system/modules/euleo/helpers/Euleo/Backend.php',
 	'Euleo_Backend_Dca' => 'system/modules/euleo/helpers/Euleo/Backend/Dca.php',
+	'Euleo_Dma' => 'system/modules/euleo/helpers/Euleo/Dma.php',
 ));
 
 

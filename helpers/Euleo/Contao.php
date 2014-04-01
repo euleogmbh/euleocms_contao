@@ -183,6 +183,7 @@ class Euleo_Contao
 		Config::getInstance()->add("\$GLOBALS['TL_CONFIG']['euleo_customer']", $data['customer']);
 		Config::getInstance()->add("\$GLOBALS['TL_CONFIG']['euleo_usercode']", $data['usercode']);
 		Config::getInstance()->add("\$GLOBALS['TL_CONFIG']['euleo_backend']", 'dca');
+		Config::getInstance()->add("\$GLOBALS['TL_CONFIG']['euleo_mode']", 'new');
 		
 		Config::getInstance()->save();
 		
@@ -208,6 +209,7 @@ class Euleo_Contao
 		Config::getInstance()->delete("\$GLOBALS['TL_CONFIG']['euleo_customer']");
 		Config::getInstance()->delete("\$GLOBALS['TL_CONFIG']['euleo_usercode']");
 		Config::getInstance()->delete("\$GLOBALS['TL_CONFIG']['euleo_backend']");
+		Config::getInstance()->delete("\$GLOBALS['TL_CONFIG']['euleo_mode']");
 		
 		Config::getInstance()->save();
 	}
