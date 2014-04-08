@@ -387,7 +387,7 @@ class Euleo_Backend_Dca implements Euleo_Backend {
         }
         
         if ($deliveredIds) {
-            $this->bridge->confirmDelivery(array_keys($deliveredIds));
+//             $this->bridge->confirmDelivery(array_keys($deliveredIds));
         }
         
         return true;
@@ -413,16 +413,66 @@ class Euleo_Backend_Dca implements Euleo_Backend {
         
         // there is already a translation, update it
         if (!$existing['id']) {
-            // create page in root of the target-tree with reference
-            
-            $result = $this->db->prepare('INSERT INTO tl_page SET pid = ?, languageMain = ?')->execute($langRoot->id, $id);
-            
-            $update = $page->row();
-            $update['pid'] = $langRoot->id;
-            $update['languageMain'] = $id;
-            $update['language'] = $row['lang'];
-            
-            $existing['id'] = $result->insertId;
+        	$parentId = $langRoot->id;
+        	
+        	// is there a parent page in the main tree?
+        	// look for the translation of it and insert the new row into it
+        	
+        	$query = "SELECT *, @pid:=pid FROM tl_page WHERE id=?"
+               . str_repeat(" UNION SELECT *, @pid:=pid FROM tl_page WHERE id=@pid", 9);
+        	
+        	$parents = $this->db->prepare($query)->execute($page->id)->fetchAllAssoc();
+        	
+        	$unmapped = array();
+        	
+        	foreach ($parents as $parent) {
+        		if ($parent['type'] != 'root') {
+	        		$mapped = $this->db->prepare('SELECT * FROM tl_page WHERE languageMain = ? AND language = ?')
+	        			->execute($parent['id'], $row['lang'])->fetchAssoc();
+	        		
+	        		if ($mapped['id']) {
+	        			$parentId = $mapped['id'];
+	        			break;
+	        		} else {
+	        			$unmapped[] = $parent;
+	        		}
+        		}
+        	}
+        	
+        	if ($unmapped) {
+	        	$create = array_reverse((array)$unmapped);
+	        	
+	        	foreach ((array)$create as $insertRow) {
+	        		$insertRow['languageMain'] = $insertRow['id'];
+	        		$insertRow['id'] = 0;
+	        		unset($insertRow['@pid:=pid']);
+	        		$insertRow['pid'] = $parentId;
+	        		$insertRow['language'] = $row['lang'];
+	        		
+	        		$lastResult = $this->db->prepare('INSERT INTO tl_page %s')->set($insertRow)->execute();
+	        		
+	        		$parentId = $lastResult->insertId;
+	        	}
+        	}
+        	
+        	
+        	if ($parentId != $langRoot->id) {
+        		$existing = $insertRow;
+        		$existing['id'] = $parentId;
+        	} else {
+        		$parentId = $langRoot->id;
+        	
+	            // create page in root of the target-tree with reference
+	            
+	            $result = $this->db->prepare('INSERT INTO tl_page SET pid = ?, languageMain = ?')->execute($langRoot->id, $id);
+	            
+	            $update = $page->row();
+	            $update['pid'] = $langRoot->id;
+	            $update['languageMain'] = $id;
+	            $update['language'] = $row['lang'];
+	            
+	            $existing['id'] = $result->insertId;
+        	}
         }
         
         $update['language'] = $row['lang'];
