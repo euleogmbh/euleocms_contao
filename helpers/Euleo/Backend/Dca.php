@@ -387,7 +387,7 @@ class Euleo_Backend_Dca implements Euleo_Backend {
         }
         
         if ($deliveredIds) {
-//             $this->bridge->confirmDelivery(array_keys($deliveredIds));
+            $this->bridge->confirmDelivery(array_keys($deliveredIds));
         }
         
         return true;
