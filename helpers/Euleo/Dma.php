@@ -27,6 +27,10 @@ class Euleo_Dma
         ');
         
         while ($fields->next()) {
+        	if ($fields->type == 'textarea') {
+        		$fields->type = 'richtextarea';
+        	}
+        	
             self::$config['dma_eg_' . $fields->pid][htmlspecialchars($fields->title)] = array(
                 'type' => $fields->type,
                 'label' => htmlspecialchars($fields->label)
