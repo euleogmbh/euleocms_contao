@@ -13,6 +13,6 @@ if ($GLOBALS['TL_CONFIG']['euleo_customer'] && $GLOBALS['TL_CONFIG']['euleo_user
 // TODO: bei nicht übersetzbaren ausblenden statt fehlermeldung
 
 $GLOBALS['TL_DCA']['tl_page']['fields']['title']['multilang'] = true;
-$GLOBALS['TL_DCA']['tl_page']['fields']['alias']['multilang'] = true;
+// $GLOBALS['TL_DCA']['tl_page']['fields']['alias']['multilang'] = true;
 $GLOBALS['TL_DCA']['tl_page']['fields']['pageTitle']['multilang'] = true;
 $GLOBALS['TL_DCA']['tl_page']['fields']['description']['multilang'] = true;
